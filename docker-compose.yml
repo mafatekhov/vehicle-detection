@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: ["sh", "/usr/src/ObjectDetectionBE/entrypoint.sh"] # new
+    volumes:
+      - ".:/usr/src/ObjectDetectionBE"
+    ports:
+      - 5004:5000
+    environment:
+      - FLASK_ENV=development
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - "./frontend:/usr/src/ObjectDetectionBE"
+      - "/usr/src/ObjectDetectionBE/node_modules"
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
